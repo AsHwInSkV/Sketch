@@ -13,11 +13,13 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@repo/backend-common": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/backend-common": "workspace:*"
+    "@repo/common": "workspace:*"
   },
   "keywords": [],
   "author": "",
