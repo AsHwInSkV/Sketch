@@ -14,7 +14,7 @@ interface User{
 
 const users :User[] = [];
 
-function isValidToke( token: string): string | null{
+function isValidToken( token: string): string | null{
     try{
         const decoded = jwt.verify(token,JWT_SECERT);
         if(!decoded || !(decoded as JwtPayload ).userId){
@@ -41,7 +41,7 @@ ws.on('connection',function connection(ws,request) {
     }
     const queryParams = new URLSearchParams(url.split('?')[1]);
     const token = queryParams.get('token') || "";
-    const userId = isValidToke(token)
+    const userId = isValidToken(token)
     console.log("UserId",userId);
 
     if(userId ===null){
@@ -91,7 +91,7 @@ ws.on('connection',function connection(ws,request) {
             })
 
             users.forEach(user=>{
-                if(user.rooms.includes(roomId)){
+                if(user.rooms.includes(roomId) && user.userId !== userId){
                     user.ws.send(JSON.stringify({
                         type : "Chat",
                         message,

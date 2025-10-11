@@ -75,6 +75,7 @@ app.post("/room",AuthMiddleware,async(req,res)=>{
     }
     //@ts-ignore
     const userId = req.userId;
+    try{
     const room =await prismaClient.room.create({
         data:{
             //@ts-ignore
@@ -84,7 +85,58 @@ app.post("/room",AuthMiddleware,async(req,res)=>{
     })
     res.json({
         roomId: room.id
-    })
+    })}
+    catch(e){
+        res.status(411).json({
+            message:"Room already exists"
+        })
+    }
+});
+
+app.post("/chats/:roomId",AuthMiddleware,async (req,res)=>{
+    try{
+        const roomId = Number(req.params.roomId);
+    const messages = await prismaClient.chat.findMany({
+        where:{
+            roomId:roomId
+        },
+        orderBy:{
+            id : "desc"
+        },
+        take:50
+    }); 
+    res.json({
+        messages
+    });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            messages:[]
+        })
+    }
+    
+});
+
+app.post("/room/:slug",AuthMiddleware,async (req,res)=>{
+    try{
+    const roomname =  req.params.slug;
+    const room = await prismaClient.room.findFirst({
+        where:{
+            slug:roomname
+        }
+    });
+    res.json({
+        room
+    });
+    }
+    catch(e){
+        console.log(e);
+        res.status(404).json({
+            message:"Room not found"
+        });
+    }
+    
 });
 
 app.listen(process.env.port||3001);
